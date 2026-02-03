@@ -1,0 +1,25 @@
+diff --git a/src/lib/filters/taskFilters.js b/src/lib/filters/taskFilters.js
+index 1234567..abcdefg 100644
+--- a/src/lib/filters/taskFilters.js
++++ b/src/lib/filters/taskFilters.js
+@@ -10,5 +10,5 @@ export const filterByAssignee = (tasks, assignee) => {
+
+ export const filterByPriority = (tasks, priority) => {
+   if (!priority) return [...tasks]
+-  return tasks.filter(task => task.priority === priority)
++  return tasks.filter(task => task.priority.toLowerCase() === priority.toLowerCase())
+ }
+diff --git a/tests/integration/api/tasks-filtering.test.js b/tests/integration/api/tasks-filtering.test.js
+index 1234567..abcdefg 100644
+--- a/tests/integration/api/tasks-filtering.test.js
++++ b/tests/integration/api/tasks-filtering.test.js
+@@ -13,7 +13,8 @@ describe('Tasks API - Filtering', () => {
+     seedTasks([
+       createTask({ title: 'Task A', status: 'todo', assignee: 'Alice', priority: 'high' }),
+       createTask({ title: 'Task B', status: 'done', assignee: 'Bob', priority: 'low' }),
+-      createTask({ title: 'Task C', status: 'todo', assignee: 'Alice', priority: 'medium' }),
++      { ...createTask({ title: 'Task C', status: 'todo', assignee: 'Alice' }), priority: undefined },
++      createTask({ title: 'Task C2', status: 'todo', assignee: 'Alice', priority: 'medium' }),
+       createTask({ title: 'Task D', status: 'in-progress', assignee: 'Charlie', priority: 'high' })
+     ])
+   })

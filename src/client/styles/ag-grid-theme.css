@@ -1,0 +1,29 @@
+/**
+ * AG Grid Theme Customization
+ * Overrides ag-theme-quartz with design tokens for cohesive dashboard aesthetics
+ */
+
+.ag-theme-quartz {
+  /* Background & Surface */
+  --ag-background-color: var(--color-background-primary);
+  --ag-foreground-color: var(--color-text-primary);
+  --ag-header-background-color: var(--color-background-secondary);
+  --ag-odd-row-background-color: var(--color-surface);
+
+  /* Interactive States */
+  --ag-row-hover-color: var(--color-surface-hover);
+  --ag-selected-row-background-color: hsl(215, 70%, 50%, 0.1);
+  --ag-range-selection-background-color: hsl(215, 70%, 50%, 0.08);
+
+  /* Borders */
+  --ag-border-color: var(--color-border);
+  --ag-row-border-color: var(--color-border);
+
+  /* Typography */
+  --ag-font-size: var(--font-size-s);
+  --ag-header-font-weight: var(--font-weight-medium);
+
+  /* Spacing */
+  --ag-cell-horizontal-padding: var(--spacing-s);
+  --ag-grid-size: var(--spacing-s);
+}

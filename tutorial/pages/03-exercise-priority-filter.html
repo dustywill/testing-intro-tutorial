@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exercise 1: Priority Filter Bug - Testing Best Practices Tutorial</title>
+  <link rel="stylesheet" href="../../src/client/styles/tokens.css">
+  <link rel="stylesheet" href="../styles/tutorial.css">
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/themes/prism.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/toolbar/prism-toolbar.min.css" rel="stylesheet" />
+</head>
+<body data-prismjs-copy="Copy" data-prismjs-copy-success="Copied!" data-prismjs-copy-timeout="3000">
+  <header class="tutorial-header">
+    <h1><a href="../index.html">Testing Best Practices Tutorial</a></h1>
+  </header>
+
+  <nav class="tutorial-nav" aria-label="Tutorial navigation">
+    <div class="nav-group nav-group--start">
+      <a href="02-setup.html" class="nav-button nav-button--secondary" aria-label="Previous: Environment Setup">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Prev
+      </a>
+    </div>
+    <div class="nav-group nav-group--center">
+      <div class="progress-indicator">
+        <div class="progress-dots" role="progressbar" aria-valuenow="3" aria-valuemin="1" aria-valuemax="7">
+          <span class="progress-dot progress-dot--complete"></span>
+          <span class="progress-dot progress-dot--complete"></span>
+          <span class="progress-dot progress-dot--current"></span>
+          <span class="progress-dot"></span>
+          <span class="progress-dot"></span>
+          <span class="progress-dot"></span>
+          <span class="progress-dot"></span>
+        </div>
+        <span class="progress-label">3 / 7</span>
+      </div>
+    </div>
+    <div class="nav-group nav-group--end">
+      <a href="04-exercise-validation.html" class="nav-button" aria-label="Next: Exercise 2">
+        Next
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </nav>
+
+  <main>
+    <section class="content-section">
+      <h2>Exercise 1: Priority Filter Bug (Unit Test Layer)</h2>
+      <div class="time-estimate">
+        <svg viewBox="0 0 16 16" aria-hidden="true">
+          <circle cx="8" cy="8" r="7" stroke-width="1.5"/>
+          <path d="M8 4v4l3 3" stroke-width="1.5"/>
+        </svg>
+        <span>~10 minutes</span>
+      </div>
+      <p><strong>Goal:</strong> Diagnose a null reference error using unit test output.</p>
+      <p>This exercise uses Bug-01, which causes a null reference error when filtering tasks by priority. You will use test output to identify and understand the problem.</p>
+    </section>
+
+    <section class="content-section">
+      <h3>Step 1: Introduce the Bug</h3>
+      <div class="callout">
+        <strong>What to observe:</strong>
+        <ul>
+          <li>Run the bug toggle command below</li>
+          <li>Watch the script output to confirm the bug is applied</li>
+          <li>Note the message indicating the bug state</li>
+        </ul>
+      </div>
+      <pre><code class="language-bash">npm run demo:bug-01</code></pre>
+      <p>Expected output:</p>
+      <pre class="output"><code>Bug-01 (Priority Filter): INTRODUCED
+Tests will now fail when filtering by priority.</code></pre>
+    </section>
+
+    <section class="content-section">
+      <h3>Step 2: Run the Failing Test</h3>
+      <div class="callout">
+        <strong>What to look for in the output:</strong>
+        <ul>
+          <li>The error message (what went wrong)</li>
+          <li>The file name where the error occurred</li>
+          <li>The line number in the stack trace</li>
+        </ul>
+      </div>
+      <pre><code class="language-bash">npm test -- tests/unit/filters/taskFilters.test.js</code></pre>
+
+      <div class="success-check">
+        <strong>Checkpoint 1: Bug Reproduced!</strong>
+        <p>If you see a test failure with an error message, congratulations! You have confirmed the bug exists. The test suite detected the problem before it could reach production.</p>
+      </div>
+    </section>
+
+    <section class="content-section">
+      <h3>Step 3: Diagnose the Problem</h3>
+      <p>Use the error message and stack trace to find the bug. Try to figure it out yourself first, then use the hints if needed.</p>
+
+      <details>
+        <summary>Hint 1: Interpreting the error message</summary>
+        <div class="note">
+          <p>Look at the error: <code>Cannot read property 'toLowerCase' of undefined</code></p>
+          <p>This means you are calling <code>.toLowerCase()</code> on something that does not exist (is <code>undefined</code>).</p>
+          <p><strong>Question:</strong> What variable might be <code>undefined</code>?</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>Hint 2: Finding the bug location</summary>
+        <div class="note">
+          <p>The stack trace points to a specific file and line number. Look for <code>taskFilters.js</code> in the trace.</p>
+          <p>Open <code>src/lib/filters/taskFilters.js</code> and find the <code>filterByPriority</code> function.</p>
+          <p><strong>What code is on the line mentioned in the error?</strong></p>
+        </div>
+      </details>
+
+      <details>
+        <summary>Solution: Root cause and fix</summary>
+        <div class="note">
+          <p><strong>Root cause:</strong> The code calls <code>task.priority.toLowerCase()</code> without checking if <code>task.priority</code> exists. When a task has no priority set, <code>task.priority</code> is <code>undefined</code>, and calling <code>.toLowerCase()</code> on <code>undefined</code> throws an error.</p>
+          <p><strong>Fix:</strong> Add a null check before calling <code>.toLowerCase()</code>, or use optional chaining:</p>
+          <pre><code class="language-javascript">// Before (buggy)
+return tasks.filter(task =>
+  task.priority.toLowerCase() === priority.toLowerCase()
+)
+
+// After (fixed)
+return tasks.filter(task =>
+  task.priority?.toLowerCase() === priority.toLowerCase()
+)</code></pre>
+          <p>The <code>?.</code> operator safely returns <code>undefined</code> if <code>task.priority</code> is <code>undefined</code>, preventing the error.</p>
+
+          <p><strong>To verify your understanding, toggle the bug off:</strong></p>
+          <pre><code class="language-bash">npm run demo:bug-01</code></pre>
+          <p>Expected output:</p>
+          <pre class="output"><code>Bug-01 (Priority Filter): FIXED
+Tests should now pass.</code></pre>
+        </div>
+      </details>
+    </section>
+
+    <section class="content-section">
+      <h3>Step 4: Verify the Fix</h3>
+      <p>Run the tests again to confirm they pass:</p>
+      <pre><code class="language-bash">npm test -- tests/unit/filters/taskFilters.test.js</code></pre>
+
+      <div class="success-check">
+        <strong>Exercise 1 Complete!</strong>
+        <p>You successfully diagnosed a unit test failure using error messages and stack traces.</p>
+        <p><strong>What you learned:</strong></p>
+        <ul>
+          <li>How to read null reference errors (<code>Cannot read property X of undefined</code>)</li>
+          <li>How to use stack traces to find the exact file and line causing the error</li>
+          <li>How unit tests catch runtime errors before they reach production</li>
+        </ul>
+        <p><strong>Ready for more?</strong> Continue to Exercise 2 to diagnose an integration test bug where validation logic is bypassed.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p><a href="../index.html">Back to Tutorial Home</a></p>
+  </footer>
+
+  <script>
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowLeft') {
+        window.location.href = '02-setup.html';
+      } else if (event.key === 'ArrowRight') {
+        window.location.href = '04-exercise-validation.html';
+      }
+    });
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-core.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-bash.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-javascript.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/toolbar/prism-toolbar.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+</body>
+</html>

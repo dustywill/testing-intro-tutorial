@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Introduction - Testing Best Practices Tutorial</title>
+  <link rel="stylesheet" href="../../src/client/styles/tokens.css">
+  <link rel="stylesheet" href="../styles/tutorial.css">
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/themes/prism.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/toolbar/prism-toolbar.min.css" rel="stylesheet" />
+</head>
+<body data-prismjs-copy="Copy" data-prismjs-copy-success="Copied!" data-prismjs-copy-timeout="3000">
+  <header class="tutorial-header">
+    <h1><a href="../index.html">Testing Best Practices Tutorial</a></h1>
+  </header>
+
+  <nav class="tutorial-nav" aria-label="Tutorial navigation">
+    <div class="nav-group nav-group--start">
+      <a href="../index.html" class="nav-button nav-button--ghost" aria-label="Return to start">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12l2-2m-2 2l2 2m-2-2h18"/></svg>
+        <span>Start</span>
+      </a>
+    </div>
+    <div class="nav-group nav-group--center">
+      <div class="progress-indicator">
+        <div class="progress-dots" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="7">
+          <span class="progress-dot progress-dot--current" aria-label="Page 1"></span>
+          <span class="progress-dot"></span>
+          <span class="progress-dot"></span>
+          <span class="progress-dot"></span>
+          <span class="progress-dot"></span>
+          <span class="progress-dot"></span>
+          <span class="progress-dot"></span>
+        </div>
+        <span class="progress-label">1 / 7</span>
+      </div>
+    </div>
+    <div class="nav-group nav-group--end">
+      <a href="02-setup.html" class="nav-button" aria-label="Next: Environment Setup">
+        Next
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </nav>
+
+  <main>
+    <section class="content-section">
+      <h2>What You Will Learn</h2>
+      <p>By the end of this tutorial, you will be able to:</p>
+      <ul>
+        <li><strong>Identify</strong> the three layers of the testing pyramid (unit, integration, E2E)</li>
+        <li><strong>Describe</strong> what types of bugs each test layer catches best</li>
+        <li><strong>Diagnose</strong> test failures using error messages and stack traces</li>
+        <li><strong>Apply</strong> test layer selection to determine which test caught a bug</li>
+        <li><strong>Evaluate</strong> whether a bug indicates missing test coverage</li>
+      </ul>
+      <div class="note">
+        Each exercise takes approximately 10 minutes to complete.
+      </div>
+    </section>
+
+    <section class="content-section">
+      <h2>Before You Begin</h2>
+
+      <h3>Required Software</h3>
+      <ul>
+        <li><a href="https://nodejs.org/en/download/" target="_blank" rel="noopener noreferrer">Node.js</a> 18.0 or higher</li>
+        <li>npm 8.0 or higher (included with Node.js)</li>
+        <li><a href="https://git-scm.com/downloads" target="_blank" rel="noopener noreferrer">Git</a> 2.0 or higher</li>
+        <li>A text editor (VS Code recommended)</li>
+      </ul>
+
+      <h3>Required Knowledge</h3>
+      <ul>
+        <li>JavaScript ES6+ (arrow functions, async/await, destructuring)</li>
+        <li>Command line basics (navigating directories, running commands)</li>
+        <li>Basic understanding of what software tests do</li>
+      </ul>
+
+      <div class="note">
+        Ready? Continue to <a href="02-setup.html">Environment Setup</a> to verify your installation.
+      </div>
+    </section>
+
+    <section class="content-section">
+      <h2>The Testing Pyramid</h2>
+      <p>Tests are organized in layers. Understanding this mental model helps you identify which test layer should catch specific bugs.</p>
+
+      <div class="mermaid">
+graph TB
+  E2E["E2E Tests&lt;br/&gt;Few, Slow, Full System"]
+  INT["Integration Tests&lt;br/&gt;Medium, API Boundaries"]
+  UNIT["Unit Tests&lt;br/&gt;Many, Fast, Isolated"]
+
+  E2E --> INT
+  INT --> UNIT
+
+  style E2E fill:#ff6b6b,stroke:#c92a2a,color:#fff
+  style INT fill:#ffd93d,stroke:#f59f00,color:#000
+  style UNIT fill:#6bcf7f,stroke:#37b24d,color:#000
+      </div>
+
+      <h3>Key Insights</h3>
+      <ul>
+        <li><strong>Unit tests are the foundation:</strong> Write many unit tests. They run fast, are easy to debug, and catch most bugs early.</li>
+        <li><strong>Integration tests verify connections:</strong> These ensure your components work together correctly, especially at API boundaries.</li>
+        <li><strong>E2E tests validate workflows:</strong> Use sparingly for critical user journeys. They're slow and can be brittle.</li>
+      </ul>
+
+      <div class="callout">
+        <strong>Mental Model Check:</strong> When a bug appears, ask yourself: "Which test layer should have caught this?" The answer reveals where your test coverage has gaps.
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p><a href="../index.html">Back to Tutorial Home</a></p>
+  </footer>
+
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'base',
+      themeVariables: {
+        fontSize: '16px',
+        nodeTextColor: '#000'
+      },
+      flowchart: {
+        useMaxWidth: false,
+        htmlLabels: true,
+        curve: 'basis',
+        nodeSpacing: 50,
+        rankSpacing: 60
+      }
+    });
+
+    mermaid.run().then(() => {
+      document.querySelectorAll('.mermaid svg').forEach(svg => {
+        svg.removeAttribute('style');
+        svg.removeAttribute('height');
+        const bbox = svg.getBBox();
+        const padding = 20;
+        const newViewBox = `${bbox.x - padding} ${bbox.y - padding} ${bbox.width + padding * 2} ${bbox.height + padding * 2}`;
+        svg.setAttribute('viewBox', newViewBox);
+        svg.setAttribute('width', bbox.width + padding * 2);
+        svg.style.maxWidth = '100%';
+        svg.style.height = 'auto';
+      });
+    });
+  </script>
+
+  <script>
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowRight') {
+        window.location.href = '02-setup.html';
+      }
+    });
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-core.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-bash.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-javascript.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/toolbar/prism-toolbar.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+/**
+ * Design Tokens - CSS Custom Properties
+ * Three-tier token architecture: primitives → semantic → component
+ */
+
+:root {
+  /* ========================================
+     TIER 1: PRIMITIVE VALUES (HSL)
+     ======================================== */
+
+  /* Neutral Palette (cool grays) */
+  --neutral-50: hsl(220, 15%, 97%);
+  --neutral-100: hsl(220, 12%, 93%);
+  --neutral-200: hsl(220, 10%, 85%);
+  --neutral-300: hsl(220, 10%, 75%);
+  --neutral-400: hsl(220, 10%, 60%);
+  --neutral-500: hsl(220, 10%, 45%);
+  --neutral-600: hsl(220, 12%, 35%);
+  --neutral-700: hsl(220, 12%, 25%);
+  --neutral-800: hsl(220, 15%, 18%);
+  --neutral-900: hsl(220, 15%, 12%);
+
+  /* Accent Blue */
+  --accent-500: hsl(215, 70%, 50%);
+  --accent-600: hsl(215, 70%, 42%);
+
+  /* Status Colors */
+  --success-500: hsl(142, 70%, 45%);
+  --warning-500: hsl(38, 92%, 50%);
+  --error-500: hsl(0, 84%, 60%);
+
+  /* ========================================
+     TIER 2: SEMANTIC TOKENS
+     ======================================== */
+
+  /* Background Colors */
+  --color-background-primary: var(--neutral-50);
+  --color-background-secondary: var(--neutral-100);
+  --color-surface: hsl(0, 0%, 100%);
+  --color-surface-hover: var(--neutral-100);
+
+  /* Text Colors */
+  --color-text-primary: var(--neutral-900);
+  --color-text-secondary: var(--neutral-600);
+  --color-text-disabled: var(--neutral-400);
+
+  /* Border & Accent */
+  --color-border: var(--neutral-200);
+  --color-accent: var(--accent-500);
+  --color-accent-hover: var(--accent-600);
+
+  /* ========================================
+     SPACING (8px grid)
+     ======================================== */
+
+  --spacing-unit: 8px;
+  --spacing-xs: calc(var(--spacing-unit) * 0.5);  /* 4px */
+  --spacing-s: var(--spacing-unit);                /* 8px */
+  --spacing-m: calc(var(--spacing-unit) * 2);      /* 16px */
+  --spacing-l: calc(var(--spacing-unit) * 3);      /* 24px */
+  --spacing-xl: calc(var(--spacing-unit) * 4);     /* 32px */
+
+  /* ========================================
+     SHADOWS (Material Design inspired)
+     ======================================== */
+
+  --shadow-none: none;
+  --shadow-low: 0 1px 3px 0 hsl(0, 0%, 0%, 0.1), 0 1px 2px 0 hsl(0, 0%, 0%, 0.06);
+  --shadow-medium: 0 4px 6px -1px hsl(0, 0%, 0%, 0.1), 0 2px 4px -1px hsl(0, 0%, 0%, 0.06);
+  --shadow-high: 0 10px 15px -3px hsl(0, 0%, 0%, 0.1), 0 4px 6px -2px hsl(0, 0%, 0%, 0.05);
+
+  /* ========================================
+     TYPOGRAPHY
+     ======================================== */
+
+  /* Font Sizes */
+  --font-size-s: 0.875rem;   /* 14px */
+  --font-size-m: 1rem;       /* 16px */
+  --font-size-l: 1.125rem;   /* 18px */
+  --font-size-xl: 1.5rem;    /* 24px */
+
+  /* Font Weights */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+
+  /* ========================================
+     BORDERS
+     ======================================== */
+
+  --border-radius-s: 4px;
+  --border-radius-m: 8px;
+  --border-width: 1px;
+}

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Testing Best Practices Tutorial</title>
+  <link rel="stylesheet" href="../src/client/styles/tokens.css">
+  <link rel="stylesheet" href="styles/tutorial.css">
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/themes/prism.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/toolbar/prism-toolbar.min.css" rel="stylesheet" />
+</head>
+<body data-prismjs-copy="Copy" data-prismjs-copy-success="Copied!" data-prismjs-copy-timeout="3000">
+  <header class="tutorial-header">
+    <h1>Testing Best Practices Tutorial</h1>
+  </header>
+
+  <main class="landing-container">
+    <div class="welcome-card">
+      <h1>Welcome</h1>
+      <p>Learn how automated testing catches bugs before they reach production through hands-on exercises.</p>
+      <a href="pages/01-introduction.html" class="cta-button">
+        Start Tutorial
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </a>
+      <div class="meta-info">
+        <p>7 lessons &middot; 45-60 minutes</p>
+      </div>
+    </div>
+
+    <nav class="toc-card" aria-label="Tutorial contents">
+      <h2>What You'll Learn</h2>
+      <ol class="toc-list">
+        <li><a href="pages/01-introduction.html">Introduction</a> &mdash; Testing pyramid and learning objectives</li>
+        <li><a href="pages/02-setup.html">Environment Setup</a> &mdash; Prerequisites and installation</li>
+        <li><a href="pages/03-exercise-priority-filter.html">Exercise 1: Priority Filter</a> &mdash; Unit test diagnosis</li>
+        <li><a href="pages/04-exercise-validation.html">Exercise 2: Validation</a> &mdash; Integration test diagnosis</li>
+        <li><a href="pages/05-exercise-drag-drop.html">Exercise 3: Drag-Drop</a> &mdash; E2E test diagnosis</li>
+        <li><a href="pages/06-tdd-demonstration.html">Exercise 4: TDD Demo</a> &mdash; Test-driven development</li>
+        <li><a href="pages/07-conclusion.html">Conclusion</a> &mdash; Summary and next steps</li>
+      </ol>
+    </nav>
+  </main>
+
+  <footer>
+    <p><a href="../index.html">Back to Main App</a></p>
+  </footer>
+
+  <script>
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowRight') {
+        window.location.href = 'pages/01-introduction.html';
+      }
+    });
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-core.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-bash.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-javascript.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/toolbar/prism-toolbar.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+</body>
+</html>

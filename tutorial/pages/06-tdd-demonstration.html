@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exercise 4: TDD Demonstration - Testing Best Practices Tutorial</title>
+  <link rel="stylesheet" href="../../src/client/styles/tokens.css">
+  <link rel="stylesheet" href="../styles/tutorial.css">
+  <!-- Prism.js syntax highlighting -->
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/themes/prism.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/toolbar/prism-toolbar.min.css" rel="stylesheet" />
+</head>
+<body data-prismjs-copy="Copy" data-prismjs-copy-success="Copied!" data-prismjs-copy-timeout="3000">
+	<header class="tutorial-header">
+		<h1><a href="../index.html">Testing Best Practices Tutorial</a></h1>
+  </header>
+
+  <nav class="tutorial-nav" aria-label="Tutorial navigation">
+    <div class="nav-group nav-group--start">
+		<a href="05-exercise-drag-drop.html" class="nav-button nav-button--secondary" aria-label="Previous: Exercise 3 - Drag-Drop Bug">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Prev
+      </a>
+    </div>
+    <div class="nav-group nav-group--center">
+      <div class="progress-indicator">
+        <div class="progress-dots" role="progressbar" aria-valuenow="5" aria-valuemin="1" aria-valuemax="7">
+          <span class="progress-dot progress-dot--complete"></span>
+          <span class="progress-dot progress-dot--complete"></span>
+          <span class="progress-dot progress-dot--complete"></span>
+          <span class="progress-dot progress-dot--complete"></span>
+          <span class="progress-dot progress-dot--complete"></span>
+          <span class="progress-dot progress-dot--current"></span>
+          <span class="progress-dot"></span>
+        </div>
+        <span class="progress-label">6 / 7</span>
+      </div>
+    </div>
+    <div class="nav-group nav-group--end">
+    <a href="07-conclusion.html" class="nav-button" aria-label="Next: Conclusion">
+		Next
+		<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+	</a>
+	</div>
+  </nav>
+
+  <main>
+    <section class="content-section">
+      <h2>Exercise 4: TDD Demonstration (Test-Driven Development)</h2>
+      <div class="time-estimate">
+        <svg viewBox="0 0 16 16" aria-hidden="true">
+          <circle cx="8" cy="8" r="7" stroke-width="1.5"/>
+          <path d="M8 4v4l3 3" stroke-width="1.5"/>
+        </svg>
+        <span><strong>Time:</strong> ~25 minutes</span>
+      </div>
+      <p><strong>Goal:</strong> Practice the Red-Green-Refactor cycle by rebuilding the search filter feature using Test-Driven Development.</p>
+      <p>In this exercise, you'll experience TDD firsthand. Instead of writing code and then testing it, you'll write tests first and let them guide your implementation. This approach leads to better code design and fewer bugs.</p>
+    </section>
+
+    <section class="content-section">
+      <h3>Understanding the Red-Green-Refactor Cycle</h3>
+      <p>TDD follows a simple three-step cycle that repeats for each small piece of functionality:</p>
+
+      <div class="mermaid">
+graph LR
+  RED["🔴 RED<br/>Write Failing Test"] --> GREEN["🟢 GREEN<br/>Make It Pass"]
+  GREEN --> REFACTOR["🔵 REFACTOR<br/>Improve Code"]
+  REFACTOR --> RED
+
+  style RED fill:#ff6b6b,stroke:#c92a2a,color:#fff
+  style GREEN fill:#6bcf7f,stroke:#37b24d,color:#000
+  style REFACTOR fill:#4dabf7,stroke:#1971c2,color:#fff
+      </div>
+
+      <dl>
+        <dt><strong>🔴 RED Phase</strong></dt>
+        <dd>Write a failing test that describes the desired behavior. The test should fail because the feature doesn't exist yet. This confirms your test is actually testing something.</dd>
+
+        <dt><strong>🟢 GREEN Phase</strong></dt>
+        <dd>Write the minimum code necessary to make the test pass. Don't worry about perfection yet—just make it work. Speed and simplicity are your goals here.</dd>
+
+        <dt><strong>🔵 REFACTOR Phase</strong></dt>
+        <dd>Now that the test is passing, improve the code quality. Clean up duplication, improve naming, add error handling—all while keeping the tests green. The passing test gives you confidence to refactor safely.</dd>
+      </dl>
+
+      <div class="callout">
+        <strong>Key Insight:</strong> Each cycle should take 5-8 minutes. Keep the iterations small. The faster you cycle through Red-Green-Refactor, the tighter your feedback loop and the fewer bugs you introduce.
+      </div>
+    </section>
+
+    <section class="content-section">
+      <h2>Why TDD Matters</h2>
+      <p>Before diving into the exercise, let's understand why TDD is worth the upfront investment.</p>
+
+      <h3>The Traditional Approach</h3>
+      <p>When you write code first and tests later, several problems emerge:</p>
+      <ul>
+        <li><strong>Untestable code:</strong> You design for features, not testability. This leads to tight coupling and dependencies that make testing difficult.</li>
+        <li><strong>Skipped tests:</strong> When deadlines loom, testing becomes optional. "We'll add tests later" often means "we'll never add tests."</li>
+        <li><strong>Confirmation bias:</strong> After writing code, you test what you built, not what should work. You miss edge cases because you're validating your assumptions, not challenging them.</li>
+        <li><strong>Fear of refactoring:</strong> Without tests, changing code feels risky. You live with technical debt because improving the code might break something.</li>
+      </ul>
+
+      <h3>The TDD Approach</h3>
+      <p>When you write tests first, development becomes disciplined and predictable:</p>
+      <ol>
+        <li><strong>You start with requirements:</strong> The failing test captures exactly what needs to work before you write any implementation code.</li>
+        <li><strong>You design for testability:</strong> Writing the test first forces you to think about the API and dependencies upfront, leading to cleaner interfaces.</li>
+        <li><strong>You build incrementally:</strong> Each small test drives one small piece of functionality. You avoid over-engineering because you only build what the current test requires.</li>
+        <li><strong>You refactor fearlessly:</strong> With passing tests, you can improve code quality without fear of breaking behavior. The tests catch regressions immediately.</li>
+      </ol>
+
+      <h3>Real-World Benefits</h3>
+      <dl>
+        <dt><strong>Safety Net</strong></dt>
+        <dd>Tests catch regressions instantly. Refactor without fear because you'll know immediately if something breaks. This confidence allows you to improve code quality continuously.</dd>
+
+        <dt><strong>Better Design</strong></dt>
+        <dd>Testable code is well-designed code. TDD forces you to write loosely coupled, modular functions with clear interfaces. This isn't a side effect—it's a direct result of designing for testability first.</dd>
+
+        <dt><strong>Living Documentation</strong></dt>
+        <dd>Tests describe how the code should behave. New team members read tests to understand what the system does. Unlike comments, tests can't lie—if they pass, the behavior is real.</dd>
+
+        <dt><strong>Fewer Bugs</strong></dt>
+        <dd>Studies show TDD reduces defect density by 40-80%. By thinking through edge cases before implementation, you catch issues early when they're cheap to fix.</dd>
+
+        <dt><strong>Faster Development</strong></dt>
+        <dd>While TDD feels slower initially, it's faster over the long run. Less debugging, fewer production incidents, and confident refactoring compound into significant time savings.</dd>
+      </dl>
+
+      <div class="callout">
+        <strong>Industry Evidence:</strong> Microsoft, IBM, and Google have published studies showing TDD reduces defect rates by 40-80% while increasing development time by only 15-35%. The ROI is clear: you spend slightly more time upfront to save significantly more time in debugging and maintenance.
+      </div>
+
+      <h3>When TDD Helps Most</h3>
+      <ul>
+        <li><strong>Complex business logic:</strong> Calculation engines, validation rules, state machines—anything with edge cases benefits from test-first thinking.</li>
+        <li><strong>API development:</strong> Designing the interface before implementation leads to cleaner, more intuitive APIs.</li>
+        <li><strong>Bug fixes:</strong> Write a failing test that reproduces the bug, then fix it. The test prevents regression forever.</li>
+        <li><strong>Refactoring legacy code:</strong> Add tests before changing code. They're your safety net for improvements.</li>
+      </ul>
+
+      <h3>When TDD Might Be Overkill</h3>
+      <ul>
+        <li><strong>Throwaway prototypes:</strong> If you're exploring ideas and will discard the code, skip TDD.</li>
+        <li><strong>Simple CRUD operations:</strong> Straightforward database operations with no business logic don't need test-first development.</li>
+        <li><strong>UI layout:</strong> Visual design is better validated with human eyes than automated tests.</li>
+      </ul>
+
+      <div class="note">
+        <strong>Bottom Line:</strong> TDD is a discipline, not a religion. Use it where it provides value—complex logic, core features, bug-prone areas. Skip it for trivial code. The key is understanding the trade-offs and choosing consciously.
+      </div>
+    </section>
+
+    <section class="content-section">
+      <h2>Exercise: Rebuild the Search Filter with TDD</h2>
+      <p>Now you'll practice TDD by rebuilding the search filter feature. We'll remove the existing feature and rebuild it using the Red-Green-Refactor cycle.</p>
+
+      <h3>Setup: Remove the Search Filter</h3>
+      <p><strong>Step 1:</strong> Run the setup command to remove the search filter from the UI:</p>
+      <pre><code class="language-bash">npm run demo:setup-no-filter</code></pre>
+
+      <div class="callout">
+        <strong>What to observe:</strong>
+        <ul>
+          <li>The command removes the search input from <code>index.html</code></li>
+          <li>Load the dashboard in your browser—the search box is gone</li>
+          <li>The tasks table still displays all tasks</li>
+        </ul>
+      </div>
+
+      <p><strong>Goal:</strong> Rebuild the search filter using TDD, starting with a failing test for the HTML element.</p>
+    </section>
+
+    <section class="content-section">
+      <h2>Cycle 1: HTML Element Exists</h2>
+      <p>Let's start with the simplest possible feature: the search input element should exist in the DOM.</p>
+
+      <h3>🔴 RED Phase - Write a Failing Test</h3>
+      <p><strong>Goal:</strong> Write a test that checks if the search input element exists. The test will fail because we removed the element.</p>
+
+      <p><strong>Step 1:</strong> Create a new test file at <code>tests/unit/client/search-input.test.js</code></p>
+
+      <details>
+        <summary>Hint: Need the file structure?</summary>
+        <div class="note">
+          <p>The test file should be in the unit test directory for client code. Create the directory path if it doesn't exist:</p>
+          <pre><code>tests/
+  unit/
+    client/
+      search-input.test.js</code></pre>
+        </div>
+      </details>
+
+      <p><strong>Step 2:</strong> Write the test code:</p>
+      <pre><code class="language-javascript">import { describe, it, expect, beforeEach } from 'vitest';
+import { JSDOM } from 'jsdom';
+import { readFileSync } from 'fs';
+import { join } from 'path';
+
+describe('Search Input Element', () => {
+  let document;
+
+  beforeEach(() => {
+    const html = readFileSync(join(process.cwd(), 'index.html'), 'utf-8');
+    const dom = new JSDOM(html);
+    document = dom.window.document;
+  });
+
+  it('should have a search input element with id searchInput', () => {
+    const searchInput = document.getElementById('searchInput');
+    expect(searchInput).toBeTruthy();
+  });
+});</code></pre>
+
+      <p><strong>Step 3:</strong> Run the test:</p>
+      <pre><code class="language-bash">npm run test:unit</code></pre>
+
+      <div class="callout">
+        <strong>What to observe:</strong>
+        <p>The test should FAIL with output like:</p>
+        <pre class="output"><code>FAIL tests/unit/client/search-input.test.js
+  Search Input Element
+    ✕ should have a search input element with id searchInput
+
+  AssertionError: expected null to be truthy</code></pre>
+        <p>This is exactly what we want! The test fails because the search input doesn't exist yet.</p>
+      </div>
+
+      <div class="success-check">
+        <strong>🔴 RED Phase Complete!</strong>
+        <p>You wrote a failing test. This proves your test is actually checking for something. If the test passed immediately, it wouldn't be testing anything useful.</p>
+      </div>
+
+      <h3>🟢 GREEN Phase - Make the Test Pass</h3>
+      <p><strong>Goal:</strong> Add the minimum code necessary to make the test pass. Don't add extra features yet—just make it work.</p>
+
+      <p><strong>Step 1:</strong> Open <code>index.html</code> and locate the toolbar div (around line 25):</p>
+      <pre><code class="language-javascript">&lt;!-- Before: No search input --&gt;
+&lt;div class="toolbar"&gt;
+  &lt;!-- Empty toolbar --&gt;
+&lt;/div&gt;</code></pre>
+
+      <p><strong>Step 2:</strong> Add the minimum search input element:</p>
+      <pre><code class="language-javascript">&lt;!-- After: Search input added --&gt;
+&lt;div class="toolbar"&gt;
+  &lt;input id="searchInput" /&gt;
+&lt;/div&gt;</code></pre>
+
+      <div class="callout">
+        <strong>Notice:</strong> We added the bare minimum—just an input with an id. No placeholder, no aria-label, no type attribute. That's intentional! In the GREEN phase, we only write code to pass the test, not to make it perfect.
+      </div>
+
+      <p><strong>Step 3:</strong> Run the test again:</p>
+      <pre><code class="language-bash">npm run test:unit</code></pre>
+
+      <div class="callout">
+        <strong>What to observe:</strong>
+        <p>The test should now PASS:</p>
+        <pre class="output"><code>PASS tests/unit/client/search-input.test.js
+  Search Input Element
+    ✓ should have a search input element with id searchInput</code></pre>
+      </div>
+
+      <div class="success-check">
+        <strong>🟢 GREEN Phase Complete!</strong>
+        <p>The test passes with minimal code. Resist the urge to add features now—wait for the REFACTOR phase.</p>
+      </div>
+
+      <h3>🔵 REFACTOR Phase - Improve the Code</h3>
+      <p><strong>Goal:</strong> Now that the test is passing, improve the code quality. Add accessibility attributes and semantic HTML.</p>
+
+      <p><strong>Step 1:</strong> Identify improvements needed:</p>
+      <div class="callout">
+        <ul>
+          <li>Add <code>type="search"</code> for semantic meaning</li>
+          <li>Add <code>placeholder</code> text to guide users</li>
+          <li>Add <code>aria-label</code> for screen reader accessibility</li>
+        </ul>
+      </div>
+
+      <p><strong>Step 2:</strong> Improve the input element in <code>index.html</code>:</p>
+      <pre><code class="language-javascript">&lt;input
+  id="searchInput"
+  type="search"
+  placeholder="Search tasks..."
+  aria-label="Search tasks by title or description"
+/&gt;</code></pre>
+
+      <details>
+        <summary>Why these attributes matter</summary>
+        <div class="note">
+          <dl>
+            <dt><strong>type="search"</strong></dt>
+            <dd>Semantic HTML that tells browsers this is a search field. Mobile browsers may show a search-optimized keyboard.</dd>
+
+            <dt><strong>placeholder</strong></dt>
+            <dd>Provides inline help text showing what users can search for.</dd>
+
+            <dt><strong>aria-label</strong></dt>
+            <dd>Screen readers announce this label, making the input accessible to visually impaired users.</dd>
+          </dl>
+        </div>
+      </details>
+
+      <p><strong>Step 3:</strong> Verify tests still pass:</p>
+      <pre><code class="language-bash">npm run test:unit</code></pre>
+
+      <div class="callout">
+        <strong>What to observe:</strong>
+        <p>The test should still PASS. Refactoring doesn't change behavior—it improves quality while maintaining the same functionality.</p>
+        <pre class="output"><code>PASS tests/unit/client/search-input.test.js</code></pre>
+      </div>
+
+      <div class="success-check">
+        <strong>🔵 Cycle 1 Complete!</strong>
+        <p>You've completed your first Red-Green-Refactor cycle!</p>
+        <ul>
+          <li><strong>RED:</strong> Wrote a failing test for the search input element</li>
+          <li><strong>GREEN:</strong> Added minimal code to pass the test</li>
+          <li><strong>REFACTOR:</strong> Improved code quality with accessibility attributes</li>
+        </ul>
+        <p>Notice how the test gave you confidence to refactor. You knew immediately that your improvements didn't break anything.</p>
+      </div>
+
+      <details>
+        <summary>Optional: Write additional tests for the new attributes</summary>
+        <div class="note">
+          <p>Now that you've added type, placeholder, and aria-label, you could write tests to verify they exist:</p>
+          <pre><code class="language-javascript">it('should have type="search"', () => {
+  const searchInput = document.getElementById('searchInput');
+  expect(searchInput.getAttribute('type')).toBe('search');
+});
+
+it('should have accessible label', () => {
+  const searchInput = document.getElementById('searchInput');
+  expect(searchInput.getAttribute('aria-label')).toBeTruthy();
+});</code></pre>
+          <p>This is optional but demonstrates how TDD encourages comprehensive test coverage.</p>
+        </div>
+      </details>
+    </section>
+
+    <section class="content-section">
+      <h2>Cycle 2: Search Functionality</h2>
+      <p>Now that the HTML element exists, let's add the JavaScript functionality. When a user types in the search box, the grid should filter to show matching tasks.</p>
+
+      <h3>🔴 RED Phase - Write a Failing Test</h3>
+      <p><strong>Goal:</strong> Write a test that verifies typing in the search input filters the task grid.</p>
+
+      <p><strong>Step 1:</strong> Add a new test to <code>tests/unit/client/search-input.test.js</code>:</p>
+      <pre><code class="language-javascript">describe('Search Functionality', () => {
+  it('should filter grid when user types in search input', () => {
+    const html = readFileSync(join(process.cwd(), 'index.html'), 'utf-8');
+    const dom = new JSDOM(html, { runScripts: 'dangerously' });
+    const document = dom.window.document;
+
+    const searchInput = document.getElementById('searchInput');
+    const mockGridApi = {
+      setGridOption: vi.fn()
+    };
+
+    global.gridApi = mockGridApi;
+
+    searchInput.value = 'test query';
+    searchInput.dispatchEvent(new dom.window.Event('input'));
+
+    expect(mockGridApi.setGridOption).toHaveBeenCalledWith(
+      'quickFilterText',
+      'test query'
+    );
+  });
+});</code></pre>
+
+      <p><strong>Step 2:</strong> Run the test:</p>
+      <pre><code class="language-bash">npm run test:unit</code></pre>
+
+      <div class="callout">
+        <strong>What to observe:</strong>
+        <p>The test FAILS because there's no event listener attached to the search input:</p>
+        <pre class="output"><code>AssertionError: expected "setGridOption" to be called with arguments: [ "quickFilterText", "test query" ]</code></pre>
+      </div>
+
+      <div class="success-check">
+        <strong>🔴 RED Phase Complete!</strong>
+        <p>The failing test describes exactly what behavior we need: when the user types, the grid should filter. Now let's implement it.</p>
+      </div>
+
+      <h3>🟢 GREEN Phase - Add Event Listener</h3>
+      <p><strong>Goal:</strong> Add the minimum JavaScript to make the test pass.</p>
+
+      <p><strong>Step 1:</strong> Open <code>src/client/app.js</code> and add the event listener:</p>
+      <pre><code class="language-javascript">// Add this after the grid is initialized
+const searchInput = document.getElementById('searchInput');
+if (searchInput) {
+  searchInput.addEventListener('input', (event) => {
+    gridApi.setGridOption('quickFilterText', event.target.value);
+  });
+}</code></pre>
+
+      <p><strong>Step 2:</strong> Run the test:</p>
+      <pre><code class="language-bash">npm run test:unit</code></pre>
+
+      <div class="callout">
+        <strong>What to observe:</strong>
+        <p>The test now PASSES:</p>
+        <pre class="output"><code>PASS tests/unit/client/search-input.test.js
+  ✓ should filter grid when user types in search input</code></pre>
+      </div>
+
+      <div class="success-check">
+        <strong>🟢 GREEN Phase Complete!</strong>
+        <p>The test passes with minimal implementation. The search now works, but we can improve it.</p>
+      </div>
+
+      <h3>🔵 REFACTOR Phase - Improve Implementation</h3>
+      <p><strong>Goal:</strong> Improve the code quality without changing behavior.</p>
+
+      <p><strong>Step 1:</strong> Identify improvements:</p>
+      <div class="callout">
+        <ul>
+          <li>Add debouncing to avoid excessive filtering on every keystroke</li>
+          <li>Extract the handler to a named function for better testability</li>
+          <li>Add error handling for edge cases</li>
+        </ul>
+      </div>
+
+      <p><strong>Step 2:</strong> Refactor the code in <code>src/client/app.js</code>:</p>
+      <pre><code class="language-javascript">// Improved version with debouncing
+function debounce(func, wait) {
+  let timeout;
+  return function executedFunction(...args) {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func(...args), wait);
+  };
+}
+
+function handleSearchInput(event) {
+  const searchText = event.target.value.trim();
+  if (gridApi) {
+    gridApi.setGridOption('quickFilterText', searchText);
+  }
+}
+
+const searchInput = document.getElementById('searchInput');
+if (searchInput) {
+  const debouncedSearch = debounce(handleSearchInput, 300);
+  searchInput.addEventListener('input', debouncedSearch);
+}</code></pre>
+
+      <p><strong>Step 3:</strong> Verify tests still pass:</p>
+      <pre><code class="language-bash">npm run test:unit</code></pre>
+
+      <div class="callout">
+        <strong>What to observe:</strong>
+        <p>Tests still pass. The refactoring improved performance and code organization without breaking functionality.</p>
+      </div>
+
+      <div class="success-check">
+        <strong>🔵 Cycle 2 Complete!</strong>
+        <p>You've completed the second TDD cycle:</p>
+        <ul>
+          <li><strong>RED:</strong> Wrote a failing test for search functionality</li>
+          <li><strong>GREEN:</strong> Implemented minimal event listener</li>
+          <li><strong>REFACTOR:</strong> Added debouncing and improved code structure</li>
+        </ul>
+        <p>The search filter is now fully functional and well-tested!</p>
+      </div>
+    </section>
+
+    <section class="content-section">
+      <h2>Exercise 5: Write Your Own Test</h2>
+      <div class="time-estimate">
+        <svg viewBox="0 0 16 16" aria-hidden="true">
+          <circle cx="8" cy="8" r="7" stroke-width="1.5"/>
+          <path d="M8 4v4l3 3" stroke-width="1.5"/>
+        </svg>
+        <span><strong>Time:</strong> ~10 minutes</span>
+      </div>
+      <p><strong>Goal:</strong> Apply what you learned by writing a test assertion independently.</p>
+      <p>This is your opportunity to practice the core TDD skill: writing test assertions. You'll complete a scaffolded test file by writing the assertion yourself.</p>
+
+      <h3>Setup Instructions</h3>
+      <p><strong>Step 1:</strong> Run the setup command to create your exercise file:</p>
+      <pre><code class="language-bash">npm run tutorial:setup-exercise-5</code></pre>
+
+      <div class="callout">
+        <strong>What this creates:</strong>
+        <p>The script generates <code>tests/unit/tutorial-exercise.test.js</code> with:</p>
+        <ul>
+          <li>Vitest test structure (describe, test, expect)</li>
+          <li>A task created with <code>createTask({ title: 'My Custom Task' })</code></li>
+          <li>A TODO comment marking where you write your assertion</li>
+          <li>Blank lines for you to complete the test</li>
+        </ul>
+      </div>
+
+      <p><strong>Step 2:</strong> Open the test file in your editor:</p>
+      <pre><code>tests/unit/tutorial-exercise.test.js</code></pre>
+
+      <h3>Your Task</h3>
+      <p>The test file contains this structure:</p>
+      <pre><code class="language-javascript">import { describe, test, expect } from 'vitest'
+import { createTask } from '../helpers/factories.js'
+
+describe('Exercise 5: Write Your Own Test', () => {
+  test('should verify task creation with custom title', () => {
+    const task = createTask({ title: 'My Custom Task' })
+
+    // TODO: Write your test assertion here
+    // Goal: Verify that the task's title property equals 'My Custom Task'
+
+
+
+  })
+})</code></pre>
+
+      <p><strong>Your job:</strong> Replace the TODO comment with a test assertion that verifies the task's title property equals <code>'My Custom Task'</code>.</p>
+
+      <h3>Success Criteria</h3>
+      <div class="callout">
+        <strong>Your assertion must:</strong>
+        <ol>
+          <li>Use <code>expect()</code> to create an assertion</li>
+          <li>Check the <code>task.title</code> property</li>
+          <li>Verify the value matches <code>'My Custom Task'</code></li>
+        </ol>
+        <p><strong>Verification:</strong> Run <code>npm run test:unit</code> and confirm the test passes:</p>
+        <pre class="output"><code>PASS tests/unit/tutorial-exercise.test.js
+  Exercise 5: Write Your Own Test
+    ✓ should verify task creation with custom title</code></pre>
+      </div>
+
+      <h3>Need Help? Progressive Hints</h3>
+      <details>
+        <summary>Hint 1: Understanding the goal</summary>
+        <div class="note">
+          <p>You need to verify that when we create a task with a specific title, the task object contains that title.</p>
+          <p>The <code>createTask()</code> factory already created the task for you. Your assertion checks that the task has the correct title property.</p>
+          <p><strong>Think about:</strong> What property on the task object holds the title? What value should it have?</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>Hint 2: Vitest assertion pattern</summary>
+        <div class="note">
+          <p>Vitest assertions follow this pattern:</p>
+          <pre><code class="language-javascript">expect(actualValue).matcherFunction(expectedValue)</code></pre>
+          <p>Common matchers:</p>
+          <ul>
+            <li><code>.toBe(value)</code> - Checks exact equality (===)</li>
+            <li><code>.toEqual(value)</code> - Checks deep equality</li>
+            <li><code>.toHaveProperty(name, value)</code> - Checks object property</li>
+          </ul>
+          <p><strong>For this test:</strong> You need to check that a specific property has a specific value.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>Hint 3: Accessing object properties</summary>
+        <div class="note">
+          <p>In JavaScript, you access object properties using dot notation:</p>
+          <pre><code class="language-javascript">const task = { title: 'My Custom Task', status: 'todo' }
+const titleValue = task.title  // 'My Custom Task'</code></pre>
+          <p><strong>For your assertion:</strong> Access the <code>title</code> property on the <code>task</code> object, then use a matcher to verify it equals the expected value.</p>
+        </div>
+      </details>
+
+      <h3>Solution</h3>
+      <details>
+        <summary>Solution (try writing your test first!)</summary>
+        <div class="note">
+          <p>There are multiple valid approaches. All three are correct:</p>
+
+          <p><strong>Approach 1: Direct property access with toBe</strong></p>
+          <pre><code class="language-javascript">expect(task.title).toBe('My Custom Task')</code></pre>
+          <p>This is the most straightforward approach. Access the property directly and check its value.</p>
+
+          <p><strong>Approach 2: Using toHaveProperty matcher</strong></p>
+          <pre><code class="language-javascript">expect(task).toHaveProperty('title', 'My Custom Task')</code></pre>
+          <p>This checks both that the property exists and that it has the expected value in one assertion.</p>
+
+          <p><strong>Approach 3: Object shape matching with toEqual</strong></p>
+          <pre><code class="language-javascript">expect(task).toEqual(expect.objectContaining({ title: 'My Custom Task' }))</code></pre>
+          <p>This is useful when you want to verify specific properties while ignoring others on the object.</p>
+
+          <p><strong>Which should you use?</strong> All three are correct! Choose the one that feels most natural to you:</p>
+          <ul>
+            <li>Approach 1 is most explicit about what you're testing</li>
+            <li>Approach 2 is most concise</li>
+            <li>Approach 3 is most flexible for partial matching</li>
+          </ul>
+
+          <p><strong>Learn more:</strong> <a href="https://vitest.dev/api/expect.html" target="_blank" rel="noopener">Vitest Assertion API Documentation</a></p>
+        </div>
+      </details>
+
+      <div class="success-check">
+        <strong>Congratulations!</strong>
+        <p>You've written your first test assertion! This is the fundamental skill of TDD:</p>
+        <ul>
+          <li>You understood what to test (task title property)</li>
+          <li>You wrote an assertion using expect() and a matcher</li>
+          <li>You verified the test passes</li>
+        </ul>
+        <p>This same pattern applies to every test you'll ever write. The complexity grows, but the core skill remains: write assertions that verify behavior.</p>
+      </div>
+    </section>
+
+    <section class="content-section">
+      <h2>Reset Demo State</h2>
+      <p>When you're done experimenting, restore the original demo state:</p>
+      <pre><code class="language-bash">npm run demo:reset</code></pre>
+      <p>This command restores all files to their clean state, ready for the next tutorial session or demo.</p>
+    </section>
+
+    <section class="content-section">
+      <div class="success-check">
+        <strong>Exercise 4 Complete!</strong>
+        <p>Congratulations! You've successfully practiced Test-Driven Development using the Red-Green-Refactor cycle.</p>
+        <p><strong>What you learned:</strong></p>
+        <ul>
+          <li>How to write failing tests that describe desired behavior (RED)</li>
+          <li>How to implement minimal code to pass tests (GREEN)</li>
+          <li>How to safely refactor code with test coverage (REFACTOR)</li>
+          <li>Why TDD leads to better design and fewer bugs</li>
+          <li>When to use TDD and when to skip it</li>
+        </ul>
+        <p><strong>Key Takeaway:</strong> TDD isn't about testing—it's about design. The tests guide you toward simple, well-structured code. The safety net is a bonus.</p>
+        <p><strong>Next step:</strong> Continue to the <a href="07-conclusion.html">Conclusion</a> to review everything you've learned.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p><a href="../index.html">Back to Tutorial Home</a></p>
+  </footer>
+
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'base',
+      themeVariables: {
+        fontSize: '16px',
+        nodeTextColor: '#000'
+      },
+      flowchart: {
+        useMaxWidth: false,
+        htmlLabels: true,
+        curve: 'basis',
+        nodeSpacing: 50,
+        rankSpacing: 60
+      }
+    });
+
+    mermaid.run().then(() => {
+      document.querySelectorAll('.mermaid svg').forEach(svg => {
+        svg.removeAttribute('style');
+        svg.removeAttribute('height');
+        const bbox = svg.getBBox();
+        const padding = 20;
+        const newViewBox = `${bbox.x - padding} ${bbox.y - padding} ${bbox.width + padding * 2} ${bbox.height + padding * 2}`;
+        svg.setAttribute('viewBox', newViewBox);
+        svg.setAttribute('width', bbox.width + padding * 2);
+        svg.style.maxWidth = '100%';
+        svg.style.height = 'auto';
+      });
+    });
+  </script>
+
+  <script>
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowLeft') {
+        window.location.href = '05-exercise-drag-drop.html';
+      } else if (event.key === 'ArrowRight') {
+        window.location.href = '07-conclusion.html';
+      }
+    });
+  </script>
+
+  <!-- Prism.js: Load order matters - Core -> Languages -> Plugins -->
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-core.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-bash.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-javascript.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/toolbar/prism-toolbar.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+</body>
+</html>

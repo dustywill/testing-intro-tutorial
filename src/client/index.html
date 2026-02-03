@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Testing Best Practices Dashboard</title>
+  <link rel="stylesheet" href="/node_modules/ag-grid-community/styles/ag-grid.css" />
+  <link rel="stylesheet" href="/node_modules/ag-grid-community/styles/ag-theme-quartz.css" />
+  <link rel="stylesheet" href="/styles/tokens.css" />
+  <link rel="stylesheet" href="/styles/base.css" />
+  <link rel="stylesheet" href="/styles/components.css" />
+  <link rel="stylesheet" href="/styles/ag-grid-theme.css" />
+  <link rel="stylesheet" href="/styles/layout.css" />
+</head>
+<body>
+  <header>
+    <h1>Task Dashboard</h1>
+  </header>
+
+  <div id="toolbar">
+    <input type="search" id="searchInput" placeholder="Search tasks..." aria-label="Search tasks" />
+    <button id="newTaskBtn" type="button">New Task</button>
+    <button id="deleteBtn" type="button" disabled>Delete</button>
+  </div>
+
+  <section id="widget-container" aria-label="Dashboard widgets">
+    <div class="widget-panel" data-widget-id="tasks-summary" tabindex="0" role="button" aria-label="Drag to reorder widget 1">
+      <div class="widget-handle">&#x2630;</div>
+      <h2>Tasks Summary</h2>
+      <div class="widget-content" id="tasks-summary-content">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+    <div class="widget-panel" data-widget-id="priority-chart" tabindex="0" role="button" aria-label="Drag to reorder widget 2">
+      <div class="widget-handle">&#x2630;</div>
+      <h2>Priority Breakdown</h2>
+      <div class="widget-content" id="priority-chart-content">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+    <div class="widget-panel" data-widget-id="status-overview" tabindex="0" role="button" aria-label="Drag to reorder widget 3">
+      <div class="widget-handle">&#x2630;</div>
+      <h2>Status Overview</h2>
+      <div class="widget-content" id="status-overview-content">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+  </section>
+
+  <section id="kanban-section" aria-label="Kanban board">
+    <h2>Kanban Board</h2>
+    <div id="kanban-board">
+      <div class="kanban-column" data-status="todo">
+        <h3>To Do</h3>
+        <div class="kanban-tasks" data-status="todo"></div>
+      </div>
+      <div class="kanban-column" data-status="in-progress">
+        <h3>In Progress</h3>
+        <div class="kanban-tasks" data-status="in-progress"></div>
+      </div>
+      <div class="kanban-column" data-status="done">
+        <h3>Done</h3>
+        <div class="kanban-tasks" data-status="done"></div>
+      </div>
+    </div>
+  </section>
+
+  <div id="myGrid" class="ag-theme-quartz" style="height: 500px; width: 100%;"></div>
+
+  <section id="taskFormSection" hidden>
+    <form id="taskForm">
+      <input type="hidden" name="id" />
+
+      <label for="title">Title</label>
+      <input type="text" id="title" name="title" required />
+
+      <label for="status">Status</label>
+      <select id="status" name="status">
+        <option value="todo">todo</option>
+        <option value="in-progress">in-progress</option>
+        <option value="done">done</option>
+      </select>
+
+      <label for="assignee">Assignee</label>
+      <input type="text" id="assignee" name="assignee" />
+
+      <label for="dueDate">Due Date</label>
+      <input type="date" id="dueDate" name="dueDate" />
+
+      <label for="priority">Priority</label>
+      <select id="priority" name="priority">
+        <option value="low">low</option>
+        <option value="medium">medium</option>
+        <option value="high">high</option>
+      </select>
+
+      <button type="submit">Save Task</button>
+      <button type="button" id="cancelBtn">Cancel</button>
+    </form>
+  </section>
+
+  <script type="module" src="/app.js"></script>
+</body>
+</html>

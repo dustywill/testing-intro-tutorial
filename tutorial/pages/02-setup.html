@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Environment Setup - Testing Best Practices Tutorial</title>
+  <link rel="stylesheet" href="../../src/client/styles/tokens.css">
+  <link rel="stylesheet" href="../styles/tutorial.css">
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/themes/prism.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/toolbar/prism-toolbar.min.css" rel="stylesheet" />
+</head>
+<body data-prismjs-copy="Copy" data-prismjs-copy-success="Copied!" data-prismjs-copy-timeout="3000">
+  <header class="tutorial-header">
+    <h1><a href="../index.html">Testing Best Practices Tutorial</a></h1>
+  </header>
+
+  <nav class="tutorial-nav" aria-label="Tutorial navigation">
+    <div class="nav-group nav-group--start">
+      <a href="01-introduction.html" class="nav-button nav-button--secondary" aria-label="Previous: Introduction">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Prev
+      </a>
+    </div>
+    <div class="nav-group nav-group--center">
+      <div class="progress-indicator">
+        <div class="progress-dots" role="progressbar" aria-valuenow="2" aria-valuemin="1" aria-valuemax="7">
+          <span class="progress-dot progress-dot--complete"></span>
+          <span class="progress-dot progress-dot--current"></span>
+          <span class="progress-dot"></span>
+          <span class="progress-dot"></span>
+          <span class="progress-dot"></span>
+          <span class="progress-dot"></span>
+          <span class="progress-dot"></span>
+        </div>
+        <span class="progress-label">2 / 7</span>
+      </div>
+    </div>
+    <div class="nav-group nav-group--end">
+      <a href="03-exercise-priority-filter.html" class="nav-button" aria-label="Next: Exercise 1">
+        Next
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </nav>
+
+  <main>
+    <section class="content-section">
+      <h2>Environment Setup</h2>
+      <div class="time-estimate">
+        <svg viewBox="0 0 16 16" aria-hidden="true">
+          <circle cx="8" cy="8" r="7" stroke-width="1.5"/>
+          <path d="M8 4v4l3 3" stroke-width="1.5"/>
+        </svg>
+        <span>~10 minutes</span>
+      </div>
+      <p>Follow these steps to prepare your development environment for the tutorial exercises.</p>
+    </section>
+
+    <section class="content-section">
+      <h3>Verify Prerequisites</h3>
+
+      <p><strong>Step 1:</strong> Check Node.js version.</p>
+      <pre><code class="language-bash">node --version</code></pre>
+      <p>Expected output:</p>
+      <pre class="output"><code>v18.12.1</code></pre>
+      <div class="note">Your version should be 18.0.0 or higher. If lower, download from <a href="https://nodejs.org">nodejs.org</a>.</div>
+
+      <p><strong>Step 2:</strong> Check npm version.</p>
+      <pre><code class="language-bash">npm --version</code></pre>
+      <p>Expected output:</p>
+      <pre class="output"><code>8.19.2</code></pre>
+      <div class="note">Your version should be 8.0.0 or higher. npm comes with Node.js.</div>
+    </section>
+
+    <section class="content-section">
+      <h3>Clone the Tutorial Repository</h3>
+
+      <p><strong>Step 3:</strong> Clone the repository.</p>
+      <pre><code class="language-bash">git clone https://github.com/dustywill/testing-intro-tutorial.git</code></pre>
+
+      <p><strong>Step 4:</strong> Navigate to the project directory.</p>
+      <pre><code class="language-bash">cd testing-intro-tutorial</code></pre>
+
+      <p><strong>Step 5:</strong> Install dependencies.</p>
+      <pre><code class="language-bash">npm install</code></pre>
+      <p>Expected output:</p>
+      <pre class="output"><code>added 245 packages, and audited 246 packages in 12s
+found 0 vulnerabilities</code></pre>
+    </section>
+
+    <section class="content-section">
+      <h3>Verify Installation</h3>
+
+      <p><strong>Step 6:</strong> Run the test suite.</p>
+      <pre><code class="language-bash">npm test</code></pre>
+      <p>Expected output:</p>
+      <pre class="output"><code>✓ src/utils/filter.test.js
+✓ src/api/tasks.test.js
+
+Test Files  2 passed
+Tests       8 passed</code></pre>
+
+      <p><strong>Step 7:</strong> Set up the demo environment.</p>
+      <pre><code class="language-bash">npm run demo:setup-broken</code></pre>
+      <p>Expected output:</p>
+      <pre class="output"><code>✓ Demo environment ready
+→ All 4 bugs applied</code></pre>
+
+      <div class="success-check">
+        <strong>Success!</strong> Your environment is ready. Continue to Exercise 1 to start diagnosing bugs.
+      </div>
+    </section>
+
+    <section class="content-section">
+      <h3>Common Issues</h3>
+
+      <div class="troubleshooting-item">
+        <h3>"Cannot find module 'vitest'"</h3>
+        <p><strong>Symptom:</strong> Running <code>npm test</code> shows "Cannot find module 'vitest/config'"</p>
+        <p><strong>Cause:</strong> Dependencies not installed or installation interrupted.</p>
+        <p><strong>Solution:</strong></p>
+        <ol>
+          <li>Delete the <code>node_modules</code> folder.</li>
+          <li>Delete <code>package-lock.json</code>.</li>
+          <li>Run <code>npm install</code>.</li>
+          <li>Run <code>npm test</code> again.</li>
+        </ol>
+      </div>
+
+      <div class="troubleshooting-item">
+        <h3>"npm: command not found"</h3>
+        <p><strong>Symptom:</strong> Terminal shows "bash: npm: command not found"</p>
+        <p><strong>Cause:</strong> Node.js not installed or not in system PATH.</p>
+        <p><strong>Solution:</strong></p>
+        <ol>
+          <li>Download Node.js from <a href="https://nodejs.org">nodejs.org</a>.</li>
+          <li>Run the installer with default options.</li>
+          <li>Close and reopen your terminal.</li>
+          <li>Verify with <code>node --version</code>.</li>
+        </ol>
+      </div>
+
+      <div class="troubleshooting-item">
+        <h3>"Port 3000 already in use"</h3>
+        <p><strong>Symptom:</strong> Starting the app shows "EADDRINUSE :::3000"</p>
+        <p><strong>Cause:</strong> Another process is using port 3000.</p>
+        <p><strong>Solution:</strong></p>
+        <ul>
+          <li><strong>On Mac/Linux:</strong> Run <code>lsof -i :3000</code>, then <code>kill -9 PID</code></li>
+          <li><strong>On Windows:</strong> Run <code>netstat -ano | findstr :3000</code>, then <code>taskkill /PID PID /F</code></li>
+        </ul>
+      </div>
+
+      <div class="help-note">
+        Still stuck? Check the project's GitHub Issues or reach out to the tutorial maintainers.
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p><a href="../index.html">Back to Tutorial Home</a></p>
+  </footer>
+
+  <script>
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowLeft') {
+        window.location.href = '01-introduction.html';
+      } else if (event.key === 'ArrowRight') {
+        window.location.href = '03-exercise-priority-filter.html';
+      }
+    });
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-core.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-bash.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-javascript.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/toolbar/prism-toolbar.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+</body>
+</html>

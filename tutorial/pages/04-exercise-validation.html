@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exercise 2: Validation Bypass Bug - Testing Best Practices Tutorial</title>
+  <link rel="stylesheet" href="../../src/client/styles/tokens.css">
+  <link rel="stylesheet" href="../styles/tutorial.css">
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/themes/prism.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/toolbar/prism-toolbar.min.css" rel="stylesheet" />
+</head>
+<body data-prismjs-copy="Copy" data-prismjs-copy-success="Copied!" data-prismjs-copy-timeout="3000">
+  <header class="tutorial-header">
+    <h1><a href="../index.html">Testing Best Practices Tutorial</a></h1>
+  </header>
+
+  <nav class="tutorial-nav" aria-label="Tutorial navigation">
+    <div class="nav-group nav-group--start">
+      <a href="03-exercise-priority-filter.html" class="nav-button nav-button--secondary" aria-label="Previous: Exercise 1">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Prev
+      </a>
+    </div>
+    <div class="nav-group nav-group--center">
+      <div class="progress-indicator">
+        <div class="progress-dots" role="progressbar" aria-valuenow="4" aria-valuemin="1" aria-valuemax="7">
+          <span class="progress-dot progress-dot--complete"></span>
+          <span class="progress-dot progress-dot--complete"></span>
+          <span class="progress-dot progress-dot--complete"></span>
+          <span class="progress-dot progress-dot--current"></span>
+          <span class="progress-dot"></span>
+          <span class="progress-dot"></span>
+          <span class="progress-dot"></span>
+        </div>
+        <span class="progress-label">4 / 7</span>
+      </div>
+    </div>
+    <div class="nav-group nav-group--end">
+      <a href="05-exercise-drag-drop.html" class="nav-button" aria-label="Next: Exercise 3">
+        Next
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </nav>
+
+  <main>
+    <section class="content-section">
+      <h2>Exercise 2: Validation Bypass Bug (Unit Test Layer)</h2>
+      <div class="time-estimate">
+        <svg viewBox="0 0 16 16" aria-hidden="true">
+          <circle cx="8" cy="8" r="7" stroke-width="1.5"/>
+          <path d="M8 4v4l3 3" stroke-width="1.5"/>
+        </svg>
+        <span>~10 minutes</span>
+      </div>
+      <p><strong>Goal:</strong> Diagnose a validation bypass using unit test output.</p>
+      <p>In this exercise, you will investigate Bug-03 where status validation is commented out, allowing invalid task status values to pass through the validator.</p>
+    </section>
+
+    <section class="content-section">
+      <h3>Step 1: Introduce the Bug</h3>
+      <div class="callout">
+        <strong>What to observe:</strong>
+        <ul>
+          <li>Run the bug toggle command below</li>
+          <li>Watch which test file fails</li>
+          <li>Note how the failure message describes what validation is missing</li>
+        </ul>
+      </div>
+      <pre><code class="language-bash">npm run demo:bug-03</code></pre>
+      <p>Expected output:</p>
+      <pre class="output"><code>======================================================================
+BUG TOGGLE: Missing Status Validation
+======================================================================
+
+Description: Invalid status values allowed into database
+Bug ID: bug-03
+
+[STATE] Bug is currently NOT ACTIVE
+[ACTION] Introducing bug (applying patch)...
+
+  Patch applied successfully.
+
+[VERIFY] Checking that tests now FAIL (as expected)...</code></pre>
+    </section>
+
+    <section class="content-section">
+      <h3>Step 2: Run the Failing Test</h3>
+      <pre><code class="language-bash">npm test -- tests/unit/server/validators.test.js</code></pre>
+      <div class="callout">
+        <strong>What to look for in the output:</strong>
+        <ul>
+          <li>Which test case is failing?</li>
+          <li>What value was expected vs. received?</li>
+          <li>What does the test name tell you about the expected behavior?</li>
+        </ul>
+      </div>
+      <p>You should see test failures in the status validation section:</p>
+      <pre class="output"><code>FAIL  tests/unit/server/validators.test.js
+  validateTaskData
+    status validation
+      ✓ accepts todo status
+      ✓ accepts in-progress status
+      ✓ accepts done status
+      ✕ returns error for invalid status value
+      ✓ allows missing status</code></pre>
+
+      <div class="success-check">
+        <strong>Checkpoint 1: Bug Reproduced!</strong>
+        <p>You have confirmed the bug exists. The test expects invalid status values to be rejected, but they are being accepted instead.</p>
+      </div>
+    </section>
+
+    <section class="content-section">
+      <h3>Step 3: Diagnose the Problem</h3>
+      <p>Unit tests verify that individual functions behave correctly in isolation. What validation logic is missing from the validator function?</p>
+
+      <details>
+        <summary>Hint 1: Understanding the test failure</summary>
+        <div class="note">
+          <p>The failing test is named <code>"returns error for invalid status value"</code>.</p>
+          <p>Look at the test expectation:</p>
+          <pre><code class="language-javascript">const result = validateTaskData({ title: 'Task', status: 'invalid' })
+expect(result.valid).toBe(false)
+expect(result.errors).toContain('status must be one of: todo, in-progress, done')</code></pre>
+          <p>The test submits an invalid status <code>'invalid'</code> and expects the validator to reject it. But the validator is accepting it.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>Hint 2: Finding the validation code</summary>
+        <div class="note">
+          <p>Open the validator file at:</p>
+          <pre><code>src/lib/validators/taskValidator.js</code></pre>
+          <p>Look for where <code>title</code> and <code>priority</code> are validated. Is there similar validation for <code>status</code>?</p>
+          <p>Compare what you see with what the test expects.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>Solution</summary>
+        <div class="note">
+          <p><strong>Root cause:</strong> The status validation code has been commented out (or removed). The validator checks title and priority, but skips status validation entirely.</p>
+          <p><strong>What should be there:</strong></p>
+          <pre><code class="language-javascript">if (data.status !== undefined && !['todo', 'in-progress', 'done'].includes(data.status)) {
+  errors.push('status must be one of: todo, in-progress, done')
+}</code></pre>
+          <p><strong>Impact:</strong> Without this check, the API would accept any status value like <code>'invalid'</code>, <code>'banana'</code>, or <code>'completed'</code>, leading to data integrity issues.</p>
+
+          <p><strong>To verify your understanding, toggle the bug off:</strong></p>
+          <pre><code class="language-bash">npm run demo:bug-03</code></pre>
+          <p>Expected output:</p>
+          <pre class="output"><code>[STATE] Bug is currently ACTIVE
+[ACTION] Removing bug (reverting patch)...
+
+  Patch reversed successfully.
+
+[VERIFY] Checking that tests now PASS...</code></pre>
+        </div>
+      </details>
+    </section>
+
+    <section class="content-section">
+      <h3>Step 4: Verify the Fix</h3>
+      <p>Confirm all tests pass:</p>
+      <pre><code class="language-bash">npm test</code></pre>
+
+      <div class="success-check">
+        <strong>Exercise 2 Complete!</strong>
+        <p>You successfully diagnosed a validation bypass bug using unit test output.</p>
+        <p><strong>What you learned:</strong></p>
+        <ul>
+          <li>How unit tests verify individual function behavior</li>
+          <li>Why input validation prevents invalid data from entering your system</li>
+          <li>How test names describe expected behavior (making failures informative)</li>
+        </ul>
+        <p><strong>Next:</strong> Continue to Exercise 3 to diagnose an E2E test bug that affects visual behavior.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p><a href="../index.html">Back to Tutorial Home</a></p>
+  </footer>
+
+  <script>
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowLeft') {
+        window.location.href = '03-exercise-priority-filter.html';
+      } else if (event.key === 'ArrowRight') {
+        window.location.href = '05-exercise-drag-drop.html';
+      }
+    });
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-core.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-bash.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-javascript.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/toolbar/prism-toolbar.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+</body>
+</html>

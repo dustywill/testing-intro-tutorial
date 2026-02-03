@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exercise 3: Drag-Drop Persistence Bug - Testing Best Practices Tutorial</title>
+  <link rel="stylesheet" href="../../src/client/styles/tokens.css">
+  <link rel="stylesheet" href="../styles/tutorial.css">
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/themes/prism.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/toolbar/prism-toolbar.min.css" rel="stylesheet" />
+</head>
+<body data-prismjs-copy="Copy" data-prismjs-copy-success="Copied!" data-prismjs-copy-timeout="3000">
+  <header class="tutorial-header">
+    <h1><a href="../index.html">Testing Best Practices Tutorial</a></h1>
+  </header>
+
+  <nav class="tutorial-nav" aria-label="Tutorial navigation">
+    <div class="nav-group nav-group--start">
+      <a href="04-exercise-validation.html" class="nav-button nav-button--secondary" aria-label="Previous: Exercise 2">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Prev
+      </a>
+    </div>
+    <div class="nav-group nav-group--center">
+      <div class="progress-indicator">
+        <div class="progress-dots" role="progressbar" aria-valuenow="5" aria-valuemin="1" aria-valuemax="7">
+          <span class="progress-dot progress-dot--complete"></span>
+          <span class="progress-dot progress-dot--complete"></span>
+          <span class="progress-dot progress-dot--complete"></span>
+          <span class="progress-dot progress-dot--complete"></span>
+          <span class="progress-dot progress-dot--current"></span>
+          <span class="progress-dot"></span>
+          <span class="progress-dot"></span>
+        </div>
+        <span class="progress-label">5 / 7</span>
+      </div>
+    </div>
+    <div class="nav-group nav-group--end">
+      <a href="06-tdd-demonstration.html" class="nav-button" aria-label="Next: TDD Demonstration">
+        Next
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </nav>
+
+  <main>
+    <section class="content-section">
+      <h2>Exercise 3: Drag-Drop Persistence Bug (E2E Test Layer)</h2>
+      <div class="time-estimate">
+        <svg viewBox="0 0 16 16" aria-hidden="true">
+          <circle cx="8" cy="8" r="7" stroke-width="1.5"/>
+          <path d="M8 4v4l3 3" stroke-width="1.5"/>
+        </svg>
+        <span>~10 minutes</span>
+      </div>
+      <p><strong>Goal:</strong> Diagnose a persistence bug using E2E test output.</p>
+      <p>This exercise uses Bug-04, where <code>layoutStore.save()</code> is commented out. When users drag widgets to new positions, the changes are lost after a page refresh. E2E tests catch this bug because they test the full user journey, including page reload behavior.</p>
+    </section>
+
+    <section class="content-section">
+      <h3>Step 1: Introduce the Bug</h3>
+      <div class="callout">
+        <strong>What to observe:</strong>
+        <ul>
+          <li>Run the bug toggle command below</li>
+          <li>Watch which test file fails</li>
+          <li>Notice how E2E tests describe user behavior, not code behavior</li>
+        </ul>
+      </div>
+      <pre><code class="language-bash">npm run demo:bug-04</code></pre>
+      <p>Expected output:</p>
+      <pre class="output"><code>======================================================================
+BUG TOGGLE: Widget Layout Not Persisted
+======================================================================
+
+Description: layoutStore.save() is commented out - drag-drop changes lost on reload
+Bug ID: bug-04
+
+[STATE] Bug is currently NOT ACTIVE
+[ACTION] Introducing bug (applying patch)...
+
+  Patch applied successfully.
+
+[VERIFY] Checking that tests now FAIL (as expected)...
+  Running E2E tests...
+  (This may take 10-20 seconds for browser automation)</code></pre>
+    </section>
+
+    <section class="content-section">
+      <h3>Step 2: Run the Failing Test</h3>
+      <pre><code class="language-bash">npm run test:e2e:headless -- e2e/flows/widget-drag-drop.spec.js</code></pre>
+      <div class="callout">
+        <strong>What to look for in the output:</strong>
+        <ul>
+          <li>What user action does the test perform? (drag, refresh, check)</li>
+          <li>What does the test expect to see after page refresh?</li>
+          <li>What actually happens? (widget positions reset)</li>
+        </ul>
+      </div>
+      <p>The failing test will be <code>widget layout persists after page refresh</code>. The test drags a widget to a new position, refreshes the page, then checks if the widget stayed in its new position.</p>
+
+      <div class="success-check">
+        <strong>Checkpoint 1: Bug Reproduced!</strong>
+        <p>You've confirmed the E2E test fails. The test expects the widget order to persist after refresh, but it resets to the original order. This is exactly the bug we introduced.</p>
+      </div>
+    </section>
+
+    <section class="content-section">
+      <h3>Step 3: Diagnose the Problem</h3>
+      <p>E2E tests simulate real user behavior. This test drags a widget, refreshes the page, and checks if the position persists. Something isn't being saved. Let's find out what.</p>
+
+      <details>
+        <summary>Hint 1: Understanding the E2E failure</summary>
+        <div class="note">
+          <p>Look at what the test assertion says:</p>
+          <pre><code class="language-javascript">expect(widgetIds).toEqual(['priority-chart', 'tasks-summary', 'status-overview'])</code></pre>
+          <p>The test expects the new order (after dragging) to persist. But after refresh, the widgets return to their original positions.</p>
+          <p><strong>Question:</strong> What mechanism should save the widget order between page loads?</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>Hint 2: Finding the persistence code</summary>
+        <div class="note">
+          <p>The widgets are in the dashboard. Look for code that handles saving widget layout:</p>
+          <ul>
+            <li>Check <code>src/client/components/dashboard-widgets.js</code></li>
+            <li>Look for a <code>saveLayout</code> or similar function</li>
+            <li>What does it do when a drag operation completes?</li>
+          </ul>
+        </div>
+      </details>
+
+      <details>
+        <summary>Solution</summary>
+        <div class="note">
+          <p><strong>Root cause:</strong> In <code>dashboard-widgets.js</code>, the <code>saveLayout</code> function has the <code>layoutStore.save()</code> call commented out:</p>
+          <pre><code class="language-javascript">function saveLayout(container) {
+  const widgets = container.querySelectorAll('.widget-panel');
+  const widgetOrder = Array.from(widgets).map(w => w.dataset.widgetId);
+  // Bug: layoutStore.save({ widgetOrder });
+}</code></pre>
+          <p>The widget order is calculated but never persisted to storage. When the page refreshes, the layout loads from storage, which still has the original order.</p>
+          <p><strong>Fix:</strong> Uncomment the <code>layoutStore.save()</code> call:</p>
+          <pre><code class="language-javascript">function saveLayout(container) {
+  const widgets = container.querySelectorAll('.widget-panel');
+  const widgetOrder = Array.from(widgets).map(w => w.dataset.widgetId);
+  layoutStore.save({ widgetOrder });
+}</code></pre>
+
+          <p><strong>To verify your understanding, toggle the bug off:</strong></p>
+          <pre><code class="language-bash">npm run demo:bug-04</code></pre>
+        </div>
+      </details>
+    </section>
+
+    <section class="content-section">
+      <h3>Step 4: Verify the Fix</h3>
+      <p>Run the E2E tests to confirm they pass:</p>
+      <pre><code class="language-bash">npm run test:e2e:headless -- e2e/flows/widget-drag-drop.spec.js</code></pre>
+      <p>Expected output:</p>
+      <pre class="output"><code>  4 passed</code></pre>
+
+      <div class="success-check">
+        <strong>Exercise 3 Complete!</strong>
+        <p>You successfully diagnosed a persistence bug using E2E test output!</p>
+        <p><strong>What you learned:</strong></p>
+        <ul>
+          <li>How E2E tests catch user-visible bugs that span the full stack</li>
+          <li>The difference between E2E and unit/integration test failures</li>
+          <li>Why E2E tests verify the full user journey (including page refresh)</li>
+        </ul>
+        <p><strong>Congratulations!</strong> You've now diagnosed bugs at all three test layers: unit, integration, and E2E.</p>
+        <p><strong>Next step:</strong> Continue to the TDD Demonstration to practice test-driven development.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p><a href="../index.html">Back to Tutorial Home</a></p>
+  </footer>
+
+  <script>
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowLeft') {
+        window.location.href = '04-exercise-validation.html';
+      } else if (event.key === 'ArrowRight') {
+        window.location.href = '06-tdd-demonstration.html';
+      }
+    });
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-core.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-bash.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-javascript.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/toolbar/prism-toolbar.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+</body>
+</html>

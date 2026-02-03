@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conclusion - Testing Best Practices Tutorial</title>
+  <link rel="stylesheet" href="../../src/client/styles/tokens.css">
+  <link rel="stylesheet" href="../styles/tutorial.css">
+  <!-- Prism.js syntax highlighting -->
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/themes/prism.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/toolbar/prism-toolbar.min.css" rel="stylesheet" />
+</head>
+<body data-prismjs-copy="Copy" data-prismjs-copy-success="Copied!" data-prismjs-copy-timeout="3000">
+	<header class="tutorial-header">
+		<h1><a href="../index.html">Testing Best Practices Tutorial</a></h1>
+  </header>
+
+  <nav class="tutorial-nav" aria-label="Tutorial navigation">
+    <div class="nav-group nav-group--start">
+    <a href="06-tdd-demonstration.html" class="nav-button nav-button--secondary" aria-label="Previous: Exercise 3 - Drag-Drop Bug">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Prev
+      </a>
+    </div>
+    <div class="nav-group nav-group--center">
+      <div class="progress-indicator">
+        <div class="progress-dots" role="progressbar" aria-valuenow="5" aria-valuemin="1" aria-valuemax="7">
+          <span class="progress-dot progress-dot--complete"></span>
+    <span class="progress-dot progress-dot--complete"></span>
+          <span class="progress-dot progress-dot--complete"></span>
+          <span class="progress-dot progress-dot--complete"></span>
+          <span class="progress-dot progress-dot--complete"></span>
+		  <span class="progress-dot progress-dot--complete"></span>
+		  <span class="progress-dot progress-dot--current"></span>
+        </div>
+        <span class="progress-label">7 / 7</span>
+    </div>
+    </div>
+    <div class="nav-group nav-group--end">
+    <a href="07-conclusion.html" class="nav-button hidden" aria-label="Next: Conclusion">
+		Next
+		<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+	</a>
+	</div>
+  </nav>
+
+  <main>
+    <section class="content-section">
+      <div class="celebration">
+        <h2>Congratulations!</h2>
+        <p>You've completed the Testing Best Practices Tutorial!</p>
+      </div>
+    </section>
+
+    <section class="content-section">
+      <h3>What You Learned</h3>
+      <p>Through hands-on exercises, you developed practical skills in bug diagnosis and test-driven development:</p>
+      <div class="skills-grid">
+        <div class="skill-card">
+          <strong>Reading Test Failures</strong>
+          You can now interpret unit test failures, identify assertion mismatches, and trace errors to specific code locations.
+        </div>
+        <div class="skill-card">
+          <strong>Integration Test Analysis</strong>
+          You understand how integration tests catch API-level bugs and verify that components communicate correctly.
+        </div>
+        <div class="skill-card">
+          <strong>E2E Test Debugging</strong>
+          You can analyze E2E test failures to diagnose bugs that affect the full user journey, including persistence and state management.
+        </div>
+        <div class="skill-card">
+          <strong>Stack Trace Navigation</strong>
+          You know how to read stack traces to locate the exact file and line where a bug originates.
+        </div>
+        <div class="skill-card">
+          <strong>Testing Pyramid</strong>
+          You understand when to use each test layer and why bugs appear at specific layers based on what they test.
+        </div>
+        <div class="skill-card">
+          <strong>Test-Driven Development</strong>
+          You practiced the Red-Green-Refactor cycle and understand how writing tests first leads to better code design and fewer bugs.
+        </div>
+        <div class="skill-card">
+          <strong>Writing Test Assertions</strong>
+          You can write your own test assertions using Vitest's expect API to verify that code behaves as expected.
+        </div>
+      </div>
+    </section>
+
+    <section class="content-section">
+      <h3>Next Steps</h3>
+      <p>Continue building your testing skills with these suggested activities:</p>
+      <ul>
+        <li><strong>Extend Test Coverage:</strong> Add new tests to the dashboard for edge cases you discovered during the exercises.</li>
+        <li><strong>Apply to Your Projects:</strong> Use the testing pyramid mental model to evaluate and improve test coverage in your own codebases.</li>
+        <li><strong>Explore Advanced Patterns:</strong> Learn about test doubles, fixtures, and snapshot testing for more complex scenarios.</li>
+      </ul>
+    </section>
+
+    <section class="content-section">
+      <h3>Resources</h3>
+      <ul class="resources-list">
+        <li>
+          <a href="https://vitest.dev/guide/" target="_blank" rel="noopener noreferrer">Vitest Documentation</a>
+          <p>Official guide for the unit and integration testing framework used in this tutorial.</p>
+        </li>
+        <li>
+          <a href="https://playwright.dev/docs/intro" target="_blank" rel="noopener noreferrer">Playwright Documentation</a>
+          <p>Learn more about E2E testing with browser automation and cross-browser support.</p>
+        </li>
+        <li>
+          <a href="https://testing-library.com/docs/guiding-principles" target="_blank" rel="noopener noreferrer">Testing Library Principles</a>
+          <p>Best practices for writing maintainable tests that focus on user behavior.</p>
+        </li>
+        <li>
+          <a href="https://martinfowler.com/articles/practical-test-pyramid.html" target="_blank" rel="noopener noreferrer">The Practical Test Pyramid</a>
+          <p>Martin Fowler's comprehensive article on balancing test layers effectively.</p>
+        </li>
+      </ul>
+    </section>
+
+    <section class="content-section">
+      <div class="success-check">
+        <strong>You're Ready!</strong>
+        <p>You now have the skills to diagnose bugs using test output, write your own tests, understand which test layer catches which types of bugs, and apply the testing pyramid to your own projects.</p>
+        <p>Automated testing isn't about achieving 100% coverage. It's about building a safety net that catches bugs before they reach production. Every test you write is an investment in your codebase's reliability.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p><a href="../index.html">Back to Tutorial Home</a></p>
+  </footer>
+
+  <script>
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowLeft') {
+        window.location.href = '06-tdd-demonstration.html';
+      }
+    });
+  </script>
+
+  <!-- Prism.js: Load order matters - Core -> Languages -> Plugins -->
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-core.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-bash.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-javascript.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/toolbar/prism-toolbar.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+</body>
+</html>

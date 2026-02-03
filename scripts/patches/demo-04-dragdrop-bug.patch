@@ -1,0 +1,13 @@
+diff --git a/src/client/components/dashboard-widgets.js b/src/client/components/dashboard-widgets.js
+index 1234567..abcdefg 100644
+--- a/src/client/components/dashboard-widgets.js
++++ b/src/client/components/dashboard-widgets.js
+@@ -46,7 +46,7 @@ export function initWidgets(containerId) {
+ function saveLayout(container) {
+   const widgets = container.querySelectorAll('.widget-panel');
+   const widgetOrder = Array.from(widgets).map(w => w.dataset.widgetId);
+-  layoutStore.save({ widgetOrder });
++  // Bug: layoutStore.save({ widgetOrder });
+ }
+
+ function restoreLayout(container) {
