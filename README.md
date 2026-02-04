@@ -27,7 +27,7 @@ cd testing-intro-tutorial
 npm install
 
 # Open the tutorial in your browser
-npm run tutorial
+./tutorial/index.html
 ```
 
 ## Tutorial Structure
