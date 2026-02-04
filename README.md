@@ -12,9 +12,40 @@ An interactive, self-paced tutorial that teaches automated testing best practice
 ## Prerequisites
 
 - **Node.js 18+** - [Download from nodejs.org](https://nodejs.org)
-- **Git** - For cloning the repository
+- **Git** - For cloning the repository (see [Windows Git Setup](#windows-git-setup) below)
 - **Code Editor** - VS Code recommended
 - **Basic JavaScript** - Variables, functions, async/await
+
+### Windows Git Setup
+
+If you don't have Git installed on Windows, you have two options:
+
+**Option 1: Install Git for Windows (Recommended)**
+
+1. Download from [git-scm.com/download/win](https://git-scm.com/download/win)
+2. Run the installer with default settings
+3. Restart your terminal/PowerShell after installation
+4. Verify with `git --version`
+
+**Option 2: Portable Git (No Install Required)**
+
+If you can't install software or want a portable solution:
+
+1. Download **PortableGit** from [git-scm.com/download/win](https://git-scm.com/download/win)
+   - Scroll down to "Portable" section, download the `.exe` file
+2. Extract to a folder (e.g., `C:\PortableGit` or a USB drive)
+3. Run `git-bash.exe` from that folder to open a Git terminal
+4. Use Git commands from within that terminal
+
+**Alternative: Download as ZIP**
+
+If Git isn't an option at all:
+
+1. Go to [github.com/dustywill/testing-intro-tutorial](https://github.com/dustywill/testing-intro-tutorial)
+2. Click the green **Code** button
+3. Select **Download ZIP**
+4. Extract the ZIP to your desired location
+5. Open a terminal in that folder and run `npm install`
 
 ## Quick Start
 
@@ -99,8 +130,14 @@ npm run build                     # Build for production
 
 ## Troubleshooting
 
+### "git not found" or "git is not recognized"
+See [Windows Git Setup](#windows-git-setup) above. If using Portable Git, make sure you're running commands from `git-bash.exe`.
+
 ### "npm not found"
 Install Node.js from [nodejs.org](https://nodejs.org). Restart your terminal after installation.
+
+### Patches fail to apply ("patch does not apply")
+Run `git pull origin main` to get the latest patch files. If you downloaded as ZIP, re-download from GitHub.
 
 ### Tests fail on first run
 Run `npm run demo:reset` to ensure a clean state, then try again.
