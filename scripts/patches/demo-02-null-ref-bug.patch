@@ -1,16 +1,12 @@
 diff --git a/src/server/data/store.js b/src/server/data/store.js
-index 1234567..abcdefg 100644
+index d5e7f24..a5fe0f1 100644
 --- a/src/server/data/store.js
 +++ b/src/server/data/store.js
-@@ -6,7 +6,10 @@ let tasks = [
-   { id: 'task-5', title: 'Review pull requests', status: 'in-progress', assignee: 'Bob', dueDate: '2025-02-25', priority: 'medium', createdAt: '2025-01-20T08:00:00Z' }
+@@ -7,6 +7,7 @@ let tasks = [
  ]
-
--export const getTasks = () => [...tasks]
-+export const getTasks = () => {
+ 
+ export const getTasks = () => {
 +  const firstId = tasks[0].id
-+  return [...tasks]
-+}
-
- export const getTaskById = (id) => {
-   return tasks.find(t => t.id === id)
+   return [...tasks]
+ }
+ 
